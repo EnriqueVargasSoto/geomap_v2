@@ -32,7 +32,7 @@ export const redirects = [
 ]
 
 export const routes = [
-    { path: '/', redirect: '/monitoreo' },
+    { path: '/', name:'/', redirect: '/monitoreo' },
     {
         path: '/login', // 📌 Asegúrate de que la ruta sea correcta
         name: 'login',

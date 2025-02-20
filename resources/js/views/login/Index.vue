@@ -41,8 +41,8 @@
     const form = ref({
         empresa_id: null,
         sucursal_id: null,
-        usuario: '',
-        clave: '',
+        usuario: null,
+        clave: null,
         /* remember: false, */
     })
 
@@ -85,8 +85,9 @@
             ability.update(userAbilityRules)
             useCookie('userData').value = data.value.user
             useCookie('accessToken').value = data.value.token
-            await nextTick(() => {
-                router.replace(route.query.to ? String(route.query.to) : '/')
+            await nextTick(async () => {
+                //router.replace(route.query.to ? String(route.query.to) : '/')
+                await router.push({ name: '/'});
             })
         } catch (err) {
             console.error(err)
@@ -95,13 +96,8 @@
 
     const onSubmit = () => {
         refVForm.value?.validate().then(({ valid: isValid }) => {
-            console.log('validacion: ', isValid);
             if (isValid)
-                login()
-            if (!isValid) {
-                console.log('no esta validado');
-                errors.value.sucursal_id = 'Debe Seleccionar una sucursal.';
-            }
+            login()
         })
     }
 
@@ -136,7 +132,7 @@
         <div class="auth-logo d-flex align-center gap-x-3">
             <VNodeRenderer :nodes="themeConfig.app.logo" />
             <h1 class="auth-title">
-                {{ themeConfig.app.title }}
+                Tracking
             </h1>
         </div>
     </RouterLink>
@@ -183,11 +179,9 @@
             >
                 <VCardText>
                     <h4 class="text-h4 mb-1">
-                        Welcome to <span class="text-capitalize">{{ themeConfig.app.title }}</span>! 👋🏻
+                        Welcome to <span class="text-capitalize">Tracking</span>! 👋🏻
                     </h4>
-                    <p class="mb-0">
-                        Please sign-in to your account and start the adventure
-                    </p>
+                    <p class="mb-0">Inicie sesión en su cuenta y comience la aventura.</p>
                 </VCardText>
                 <VCardText>
                     <VForm ref="refVForm" @submit.prevent="onSubmit">
