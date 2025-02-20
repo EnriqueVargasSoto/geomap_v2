@@ -33,74 +33,6 @@ export const redirects = [
 
 export const routes = [
     { path: '/', redirect: '/monitoreo' },
-    /* {
-        path: '/dashboard', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'dashboard',
-        component: () => import('@/views/dashboards/Dashboard.vue'),//Dashboard,//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/seguridad/modulos', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'modulos',
-        component: () => import('@/views/modulos/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/seguridad/usuarios', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'usuarios',
-        component: () => import('@/views/users/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/seguridad/roles-permisos/roles', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'roles',
-        component: () => import('@/views/roles-permisos/roles/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/seguridad/roles-permisos/permisos', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'permisos',
-        component: () => import('@/views/roles-permisos/permisos/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-
-    {
-        path: '/maestros/oficinas', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'oficinas',
-        component: () => import('@/views/maestros/oficinas/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/maestros/tipo-documentos', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'tipo-documentos',
-        component: () => import('@/views/maestros/tipos_documentos/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/maestros/tipo-movimientos', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'tipo-movimientos',
-        component: () => import('@/views/maestros/tipo_movimientos/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/maestros/areas', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'areas',
-        component: () => import('@/views/maestros/areas/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/maestros/estados', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'estados',
-        component: () => import('@/views/maestros/estados/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    },
-    {
-        path: '/maestros/importancias', // 📌 Asegúrate de que la ruta sea correcta
-        name: 'importancias',
-        component: () => import('@/views/maestros/importancias/Index.vue'),//DashboardAnalytics
-        meta: { requiresAuth: true } // Ruta protegida
-    }, */
-
     {
         path: '/login', // 📌 Asegúrate de que la ruta sea correcta
         name: 'login',
@@ -118,9 +50,10 @@ export const routes = [
         meta: { requiresAuth: true } // Ruta protegida
     },
     {
-        path: '/monitoreo/preventa', // 📌 Asegúrate de que la ruta sea correcta
+        path: '/monitoreo/preventa/:id', // 📌 Asegúrate de que la ruta sea correcta
         name: 'preventa',
-        component: () => import('@/views/intranet/monitoreo/Index.vue'),//Dashboard,//DashboardAnalytics
+        component: () => import('@/views/intranet/preventa/Index.vue'),//Dashboard,//DashboardAnalytics
+        props: true, // Esto permite recibir parámetros como props
         meta: { requiresAuth: true } // Ruta protegida
     }
 ];

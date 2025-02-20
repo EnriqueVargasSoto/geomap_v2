@@ -282,6 +282,10 @@ const date = ref('')
 
 const currentTab = ref('item-1')
 const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oat cake wafer. Cotton candy candy canes marzipan carrot cake. Sesame snaps lemon drops candy marzipan donut brownie tootsie roll. Icing croissant bonbon biscuit gummi bears. Pudding candy canes sugar plum cookie chocolate cake powder croissant.'
+
+const goToDetail = (id) => {
+    router.push({ name: 'monitoreo/preventa', params: { id } });
+};
 </script>
 
 <template>
@@ -346,6 +350,18 @@ const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oa
 
             <VCardText>
                 <VRow>
+                    <!-- 👉 Select Status -->
+                    <VCol
+                        cols="12"
+                        sm="3"
+                    >
+                        <AppDateTimePicker
+                            v-model="date"
+                            label="Default"
+                            placeholder="Select date"
+                        />
+                    </VCol>
+
                     <!-- 👉 Select Role -->
                     <VCol
                         cols="12"
@@ -360,6 +376,7 @@ const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oa
                             clear-icon="tabler-x"
                         />
                     </VCol>
+
                     <!-- 👉 Select Plan -->
                     <VCol
                         cols="12"
@@ -374,17 +391,7 @@ const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oa
                             clear-icon="tabler-x"
                         />
                     </VCol>
-                    <!-- 👉 Select Status -->
-                    <VCol
-                        cols="12"
-                        sm="3"
-                    >
-                        <AppDateTimePicker
-                            v-model="date"
-                            label="Default"
-                            placeholder="Select date"
-                        />
-                    </VCol>
+
                     <VCol
                         cols="12"
                         sm="3"
@@ -514,7 +521,7 @@ const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oa
                                     <div class="d-flex flex-column">
                                     <h6 class="text-base">
                                         <RouterLink
-                                        :to="{ name: 'apps-user-view-id', params: { id: item.id } }"
+
                                         class="font-weight-medium text-link"
                                         >
                                         {{ item.fullName }}
@@ -579,7 +586,7 @@ const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oa
                                     <VIcon icon="tabler-dots-vertical" />
                                     <VMenu activator="parent">
                                     <VList>
-                                        <VListItem :to="{ name: 'apps-user-view-id', params: { id: item.id } }">
+                                        <VListItem >
                                         <template #prepend>
                                             <VIcon icon="tabler-eye" />
                                         </template>
@@ -587,7 +594,7 @@ const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oa
                                         <VListItemTitle>View</VListItemTitle>
                                         </VListItem>
 
-                                        <VListItem link>
+                                        <VListItem :to="{ name: 'preventa', params: { id: 123 } }">
                                         <template #prepend>
                                             <VIcon icon="tabler-map" />
                                         </template>
@@ -622,10 +629,6 @@ const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oa
 
 
         </VCard>
-        <!-- 👉 Add New User -->
-        <!-- <AddNewUserDrawer
-        v-model:is-drawer-open="isAddNewUserDrawerVisible"
-        @user-data="addNewUser"
-        /> -->
+
     </section>
 </template>

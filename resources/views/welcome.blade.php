@@ -176,5 +176,8 @@
     </body> --}}
     <body>
         <div id="app"></div>
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2PCkdFyC80CvWLpRPom2K5iIZ3u885sc"></script>
+
     </body>
 </html>
