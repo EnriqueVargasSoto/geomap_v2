@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use DB;
 
 class RutaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        /* $auth = Auth::user();
+        return response()->json($auth); */
+        $idEmpresa = $request->idEmpresa;
+		$idSucursal = $request->idSucursal;
+		$idZona = $request->zona;//input('zona');
+		$idPersona = $request->idPersona;
+		$lista = DB::select("exec web_obtenerRutasxZona ?,?,?,?", [$idEmpresa, $idSucursal, $idZona, $idPersona  ]);
+		return response()->json($lista);
     }
 
     /**

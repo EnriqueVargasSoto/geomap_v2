@@ -12,12 +12,12 @@ class ZonaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $idEmpresa = Auth::user()->idEmpresa ?? '0081';
-		$idSucursal = Auth::user()->idSucursal ?? '01  ';
-		$idPersona = Auth::user()->id ?? '131';
+        $idEmpresa = $request->idEmpresa ?? '0081';
+		$idSucursal = $request->idSucursal ?? '01  ';
+		$idPersona = $request->idPersona ?? '131';
 		$lista = DB::select("exec web_obtenerZonasxPersona ?,?,?", [$idEmpresa, $idSucursal, $idPersona ]);
 		return response()->json($lista);
     }

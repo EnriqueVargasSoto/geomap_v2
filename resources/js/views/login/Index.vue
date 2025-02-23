@@ -30,8 +30,8 @@
     const sucursales = ref([]);
 
     const errors = ref({
-        empresa_id: null,//'Debe seleccionar una empresa.',
-        sucursal_id: null,//'Debe Seleccionar una sucursal.',
+        empresa: null,//'Debe seleccionar una empresa.',
+        sucursal: null,//'Debe Seleccionar una sucursal.',
         usuario: null,//'Campo usuario no debe estar vacio.',
         clave: null,//'Campo Contraseña no debe estar vacio.',
     })
@@ -39,8 +39,8 @@
     const refVForm = ref()
 
     const form = ref({
-        empresa_id: null,
-        sucursal_id: null,
+        empresa: null,
+        sucursal: null,
         usuario: null,
         clave: null,
         /* remember: false, */
@@ -64,12 +64,10 @@
             const { data, error } = await useApi(`/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    idEmpresa: form.value.empresa_id,
-                    idSucursal: form.value.sucursal_id,
-                    usuario: form.value.usuario,
-                    clave: form.value.clave
-                }),
+                body: JSON.stringify(form.value),
+                onResponseError({response}){
+                    errors.value.usuario = response.data.message;
+                }
             });
 
             console.log('data login:', data);
@@ -189,14 +187,14 @@
                             <!-- email -->
                             <VCol cols="12">
                                 <AppSelect
-                                    v-model="form.empresa_id"
+                                    v-model="form.empresa"
                                     :items="empresas"
                                     item-title="razonSocial"
                                     item-value="idEmpresa"
                                     label="Empresa"
                                     placeholder="Seleccione Empresa"
                                     :rules="[requiredValidator]"
-                                    :error-messages="errors.empresa_id"
+                                    :error-messages="errors.empresa"
                                     @update:modelValue="handleSelectChange"
                                 />
                             </VCol>
@@ -204,14 +202,14 @@
                             <!-- email -->
                             <VCol cols="12">
                                 <AppSelect
-                                    v-model="form.sucursal_id"
+                                    v-model="form.sucursal"
                                     :items="sucursales"
                                     item-title="nombre"
                                     item-value="idSucursal"
                                     label="Sucursal"
                                     placeholder="Seleccione Sucursal"
                                     :rules="[requiredValidator]"
-                                    :error-messages="errors.sucursal_id"
+                                    :error-messages="errors.sucursal"
                                 />
                             </VCol>
 
