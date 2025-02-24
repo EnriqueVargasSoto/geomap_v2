@@ -15,11 +15,11 @@ class ZonaController extends Controller
     public function index(Request $request)
     {
         //
-        $idEmpresa = $request->idEmpresa ?? '0081';
-		$idSucursal = $request->idSucursal ?? '01  ';
-		$idPersona = $request->idPersona ?? '131';
+        $idEmpresa = $request->idEmpresa ;
+		$idSucursal = $request->idSucursal ;
+		$idPersona = $request->idPersona;
 		$lista = DB::select("exec web_obtenerZonasxPersona ?,?,?", [$idEmpresa, $idSucursal, $idPersona ]);
-		return response()->json($lista);
+		return response()->json(['data'=>$lista]);
     }
 
     /**

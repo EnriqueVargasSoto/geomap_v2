@@ -20,6 +20,7 @@ Route::apiResource('rutas', RutaController::class);
 
 Route::get('gestion', [MonitoreoController::class, 'index']);
 
-Route::get('gestion-inicializa-tabla', [MonitoreoController::class, 'gesttionInicializaTabla']);
+Route::get('gestion-inicializa-tabla', [MonitoreoController::class, 'gestionInicializaTabla']);
+Route::get('cobranza-inicializa-tabla', [MonitoreoController::class, 'cobranzaInicializaTabla']);
 
 Route::get('apps/users', [EmpresaController::class, 'usuarios']);

@@ -2,6 +2,9 @@
 /* import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue' */
 
 // TODO: Get type from backend
+
+//!SECTION filtros
+
 const user = useCookie('userData')
 const paramsForm = ref({
     idEmpresa : null,
@@ -9,6 +12,8 @@ const paramsForm = ref({
     idPersona : null,
     zona: null
 });
+
+
 const filtros = ref({
     idEmpresa: null,
     idSucursal: null,
@@ -28,24 +33,29 @@ const rutas = ref([
 ]);
 
 const headersGestion = ref([]);
+const headersCobranza = ref([]);
 const itemsPerPage = ref(10)
+const itemsPerPageCobranza = ref(10)
 const page = ref(1)
+const pageCobranza = ref(1)
 const check = ref(false);
+const checkCobranza = ref(false);
 const items_selects = ref([]);
+const items_selectsCobranza = ref([]);
 
 const { data } = await useApi(createUrl('gestion', {query: filtros}));
+const { dataCobranza } = ref();//await useApi(createUrl('gestion', {query: filtros}));
 
 const tableData = computed(() => data.value.data ?? []);
+const tableDataCobranza = ref([]);// computed(() => data.value.data ?? []);
 
-const totalItems = computed(() => data.value.total ?? []);
+const totalItems = computed(() => data.value.recordsTotal ?? []);
+const totalItemsCobranza = ref(0);//computed(() => data.value.total ?? []);
 
 const fechaFormateada = ref(null);
 
 // 👉 Store
 const searchQuery = ref('')
-const selectedRole = ref()
-const selectedPlan = ref()
-const selectedStatus = ref()
 
 // Data table options
 
@@ -135,82 +145,9 @@ const headers = [
   },
 ]
 
-const {
-  data: usersData,
-  execute: fetchUsers,
-} = await useApi(createUrl('/apps/users', {
-  query: {
-    q: searchQuery,
-    status: selectedStatus,
-    plan: selectedPlan,
-    role: selectedRole,
-    itemsPerPage,
-    page,
-    sortBy,
-    orderBy,
-  },
-}))
 
-const users = computed(() => usersData.value.users)
-const totalUsers = computed(() => usersData.value.totalUsers)
 
-// 👉 search filters
-const roles = [
-  {
-    title: 'Admin',
-    value: 'admin',
-  },
-  {
-    title: 'Author',
-    value: 'author',
-  },
-  {
-    title: 'Editor',
-    value: 'editor',
-  },
-  {
-    title: 'Maintainer',
-    value: 'maintainer',
-  },
-  {
-    title: 'Subscriber',
-    value: 'subscriber',
-  },
-]
 
-const plans = [
-  {
-    title: 'Basic',
-    value: 'basic',
-  },
-  {
-    title: 'Company',
-    value: 'company',
-  },
-  {
-    title: 'Enterprise',
-    value: 'enterprise',
-  },
-  {
-    title: 'Team',
-    value: 'team',
-  },
-]
-
-const status = [
-  {
-    title: 'Pending',
-    value: 'pending',
-  },
-  {
-    title: 'Active',
-    value: 'active',
-  },
-  {
-    title: 'Inactive',
-    value: 'inactive',
-  },
-]
 
 const resolveUserRoleVariant = role => {
   const roleLowerCase = role.toLowerCase()
@@ -282,45 +219,8 @@ const deleteUser = async id => {
   fetchUsers()
 }
 
-const widgetData = ref([
-  {
-    title: 'Session',
-    value: '21,459',
-    change: 29,
-    desc: 'Total Users',
-    icon: 'tabler-users',
-    iconColor: 'primary',
-  },
-  {
-    title: 'Paid Users',
-    value: '4,567',
-    change: 18,
-    desc: 'Last Week Analytics',
-    icon: 'tabler-user-plus',
-    iconColor: 'error',
-  },
-  {
-    title: 'Active Users',
-    value: '19,860',
-    change: -14,
-    desc: 'Last Week Analytics',
-    icon: 'tabler-user-check',
-    iconColor: 'success',
-  },
-  {
-    title: 'Pending Users',
-    value: '237',
-    change: 42,
-    desc: 'Last Week Analytics',
-    icon: 'tabler-user-search',
-    iconColor: 'warning',
-  },
-])
-
-const date = ref('')
 
 const currentTab = ref('item-1')
-const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oat cake wafer. Cotton candy candy canes marzipan carrot cake. Sesame snaps lemon drops candy marzipan donut brownie tootsie roll. Icing croissant bonbon biscuit gummi bears. Pudding candy canes sugar plum cookie chocolate cake powder croissant.'
 
 const goToDetail = (id) => {
     router.push({ name: 'monitoreo/preventa', params: { id } });
@@ -330,9 +230,10 @@ const goToDetail = (id) => {
 const obtenerZonas = async () => {
 
     try {
-        const response = await useApi(`/zonas`, paramsForm.value);
+        const response = await useApi(createUrl('zonas', {query: paramsForm}));
+
         console.log('zonas: ', response.data.value);
-        zonas.value.push(...response.data.value);
+        zonas.value.push(...response.data.value.data);
         filtros.value.zona = zonas.value[0]?.idZona || null;
         paramsForm.value.zona = zonas.value[0]?.idZona || null;
         console.log('zona: ', filtros.value);
@@ -344,9 +245,9 @@ const obtenerZonas = async () => {
 const obtenerRutas = async () => {
     console.log('parametros de ruta: ', paramsForm.value);
     try {
-        const response = await useApi('rutas', {query: paramsForm.value});
+        const response = await useApi(createUrl('rutas', {query: paramsForm}));
         console.log('rutas: ', response.data.value);
-        rutas.value.push(...response.data.value);
+        rutas.value.push(...response.data.value.data);
         filtros.value.ruta = rutas.value[0]?.idRuta || null;
         console.log('filtros: ', filtros.value);
     } catch (error) {
@@ -363,6 +264,21 @@ const fetchInitTableGestion = async() => {
         page.value = data?.value.data?.page || 1;
         check.value = data?.value.data?.check || false;
         items_selects.value = data?.value.data?.item_selects || [];
+
+    } catch (error) {
+        console.log('error: ', error);
+    }
+}
+
+const fetchInitTableCobranza = async() => {
+    try {
+        const {data} = await useApi('/cobranza-inicializa-tabla');
+
+        headersCobranza.value = data?.value.data?.headers || [];
+        itemsPerPageCobranza.value = data?.value.data?.per_page || 10;
+        pageCobranza.value = data?.value.data?.page || 1;
+        checkCobranza.value = data?.value.data?.check || false;
+        items_selectsCobranza.value = data?.value.data?.item_selects || [];
 
     } catch (error) {
         console.log('error: ', error);
@@ -401,6 +317,7 @@ onMounted(async () => {
 
 
     await fetchInitTableGestion();
+    await fetchInitTableCobranza();
     await obtenerZonas();
     await obtenerRutas();
 });
@@ -461,7 +378,7 @@ onMounted(async () => {
                         />
                     </VCol>
 
-                    <VCol
+                    <!-- <VCol
                         cols="12"
                         sm="3"
                         style="display: flex;align-items: flex-end;"
@@ -483,7 +400,7 @@ onMounted(async () => {
                                 Limpiar
                             </VBtn>
                         </div>
-                    </VCol>
+                    </VCol> -->
                 </VRow>
             </VCardText>
         </VCard>
@@ -679,7 +596,7 @@ onMounted(async () => {
                                 <TablePagination
                                     v-model:page="page"
                                     :items-per-page="itemsPerPage"
-                                    :total-items="totalUsers"
+                                    :total-items="totalItems"
                                 />
                             </template>
                         </VDataTableServer>
@@ -692,193 +609,7 @@ onMounted(async () => {
                         :value="`item-2`"
                     >
 
-                        <VCardText class="d-flex flex-wrap gap-4">
-                            <div class="me-3 d-flex gap-3">
-                                <AppSelect
-                                    :model-value="itemsPerPage"
-                                    :items="[
-                                    { value: 10, title: '10' },
-                                    { value: 25, title: '25' },
-                                    { value: 50, title: '50' },
-                                    { value: 100, title: '100' },
-                                    { value: -1, title: 'All' },
-                                    ]"
-                                    style="inline-size: 6.25rem;"
-                                    @update:model-value="itemsPerPage = parseInt($event, 10)"
-                                />
-                            </div>
-                            <VSpacer />
-
-                            <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
-                                <!-- 👉 Search  -->
-                                <div style="inline-size: 15.625rem;">
-                                    <AppTextField
-                                        v-model="searchQuery"
-                                        placeholder="Buscar..."
-                                    />
-                                </div>
-
-                                <!-- 👉 Export button -->
-                                <VBtn
-                                    variant="tonal"
-                                    color="secondary"
-                                    prepend-icon="tabler-file-type-csv"
-                                >
-                                    Excel
-                                </VBtn>
-
-                                <!-- 👉 Export button -->
-                                <VBtn
-                                    variant="tonal"
-                                    color="secondary"
-                                    prepend-icon="tabler-file-type-pdf"
-                                >
-                                    PDF
-                                </VBtn>
-
-                                <!-- 👉 Add user button -->
-                                <VBtn
-                                    prepend-icon="tabler-table"
-                                    @click="isAddNewUserDrawerVisible = true"
-                                >
-                                    Resumen
-                                </VBtn>
-                            </div>
-                        </VCardText>
-
-                        <VDivider />
-
-                        <!-- SECTION datatable -->
-                        <VDataTableServer
-                            v-model:items-per-page="itemsPerPage"
-                            v-model:model-value="selectedRows"
-                            v-model:page="page"
-                            :items="users"
-                            item-value="id"
-                            :items-length="totalUsers"
-                            :headers="headers"
-                            class="text-no-wrap"
-                            show-select
-                            @update:options="updateOptions"
-                        >
-                            <!-- User -->
-                            <template #item.user="{ item }">
-                                <div class="d-flex align-center gap-x-4">
-                                    <VAvatar
-                                    size="34"
-                                    :variant="!item.avatar ? 'tonal' : undefined"
-                                    :color="!item.avatar ? resolveUserRoleVariant(item.role).color : undefined"
-                                    >
-                                    <VImg
-                                        v-if="item.avatar"
-                                        :src="item.avatar"
-                                    />
-                                    <span v-else>{{ avatarText(item.fullName) }}</span>
-                                    </VAvatar>
-                                    <div class="d-flex flex-column">
-                                    <h6 class="text-base">
-                                        <RouterLink
-
-                                        class="font-weight-medium text-link"
-                                        >
-                                        {{ item.fullName }}
-                                        </RouterLink>
-                                    </h6>
-                                    <div class="text-sm">
-                                        {{ item.email }}
-                                    </div>
-                                    </div>
-                                </div>
-                            </template>
-
-                            <!-- 👉 Role -->
-                            <template #item.role="{ item }">
-                                <div class="d-flex align-center gap-x-2">
-                                    <VIcon
-                                    :size="22"
-                                    :icon="resolveUserRoleVariant(item.role).icon"
-                                    :color="resolveUserRoleVariant(item.role).color"
-                                    />
-
-                                    <div class="text-capitalize text-high-emphasis text-body-1">
-                                    {{ item.role }}
-                                    </div>
-                                </div>
-                            </template>
-
-                            <!-- Plan -->
-                            <template #item.plan="{ item }">
-                                <div class="text-body-1 text-high-emphasis text-capitalize">
-                                    {{ item.currentPlan }}
-                                </div>
-                            </template>
-
-                            <!-- Status -->
-                            <template #item.status="{ item }">
-                                <VChip
-                                    :color="resolveUserStatusVariant(item.status)"
-                                    size="small"
-                                    label
-                                    class="text-capitalize"
-                                >
-                                    {{ item.status }}
-                                </VChip>
-                            </template>
-
-                            <!-- Actions -->
-                            <template #item.actions="{ item }">
-                                <!-- <IconBtn @click="deleteUser(item.id)">
-                                    <VIcon icon="tabler-trash" />
-                                </IconBtn>
-
-                                <IconBtn>
-                                    <VIcon icon="tabler-eye" />
-                                </IconBtn> -->
-
-                                <VBtn
-                                    icon
-                                    variant="text"
-                                    color="medium-emphasis"
-                                >
-                                    <VIcon icon="tabler-dots-vertical" />
-                                    <VMenu activator="parent">
-                                    <VList>
-                                        <VListItem >
-                                        <template #prepend>
-                                            <VIcon icon="tabler-eye" />
-                                        </template>
-
-                                        <VListItemTitle>View</VListItemTitle>
-                                        </VListItem>
-
-                                        <VListItem :to="{ name: 'preventa', params: { id: 123 } }">
-                                        <template #prepend>
-                                            <VIcon icon="tabler-map" />
-                                        </template>
-                                        <VListItemTitle>Edit</VListItemTitle>
-                                        </VListItem>
-
-                                        <VListItem @click="deleteUser(item.id)">
-                                        <template #prepend>
-                                            <VIcon icon="tabler-tag" />
-                                        </template>
-                                        <VListItemTitle>Delete</VListItemTitle>
-                                        </VListItem>
-                                    </VList>
-                                    </VMenu>
-                                </VBtn>
-                            </template>
-
-                            <!-- pagination -->
-                            <template #bottom>
-                                <TablePagination
-                                    v-model:page="page"
-                                    :items-per-page="itemsPerPage"
-                                    :total-items="totalUsers"
-                                />
-                            </template>
-                        </VDataTableServer>
-                        <!-- SECTION -->
+                        <span>afsads</span>
                     </VWindowItem>
                 </VWindow>
             </VCardText>
@@ -889,3 +620,16 @@ onMounted(async () => {
 
     </section>
 </template>
+
+<style scoped>
+    .v-data-table th.fixed-start,
+    .v-data-table td.fixed-start {
+    position: sticky;
+    left: 0;
+    z-index: 11; /* Asegura que esté por encima de otras columnas */
+    background: white; /* Mantiene el fondo fijo */
+    }
+    .v-data-table thead tr th {
+    z-index: 10;
+    }
+</style>

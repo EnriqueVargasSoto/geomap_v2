@@ -45,7 +45,7 @@ class MonitoreoController extends Controller
 
 					return response()->json([
                         'data' => $items,
-                        'total' => $total,
+                        'recordsTotal' => $total,
                         'page' => $page,
                         'per_page' => $perPage,
                         'total_pages' => ceil($total / $perPage),
@@ -60,7 +60,49 @@ class MonitoreoController extends Controller
 		}
     }
 
-    public function gesttionInicializaTabla(){
+    public function gestionInicializaTabla(){
+        $headers = [
+            ['title' => 'Jefe de Unidad de Negocio', 'key' => 'nombrex', 'sortable' => true, 'fixed' => 'start'],
+            ['title' => 'Teléfono', 'key' => 'telefonox', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Zona', 'key' => 'zona', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Ruta', 'key' => 'ruta', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Establecimientos', 'key' => 'clientes', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Establecimientos Atendidos', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
+
+        ];
+
+        $buttons = [
+
+        ];
+
+        $itemSelects = [
+            ['title' => '5', 'value' => 5],
+            ['title' => '10', 'value' => 10],
+            ['title' => '25', 'value' => 25],
+            ['title' => '50', 'value' => 50],
+            ['title' => '100', 'value' => 100],
+        ];
+
+        $data = [
+            'headers' => $headers,
+            'per_page' => 10,
+            'page' => 1,
+            'title' => 'Ejemplo',
+            'buttons' => $buttons,
+            'filters' => [],
+            'check' => false,
+            'item_selects' => $itemSelects
+        ];
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function cobranzaInicializaTabla(){
         $headers = [
             ['title' => 'Jefe de Unidad de Negocio', 'key' => 'nombrex', 'sortable' => true, 'fixed' => true],
             ['title' => 'Teléfono', 'key' => 'telefonox', 'sortable' => true, 'fixed' => true],

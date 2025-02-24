@@ -22,7 +22,7 @@ class RutaController extends Controller
 		$idZona = $request->zona;//input('zona');
 		$idPersona = $request->idPersona;
 		$lista = DB::select("exec web_obtenerRutasxZona ?,?,?,?", [$idEmpresa, $idSucursal, $idZona, $idPersona  ]);
-		return response()->json($lista);
+		return response()->json(['data'=>$lista]);
     }
 
     /**
