@@ -39,6 +39,8 @@ const tableData = computed(() => data.value.data ?? []);
 
 const totalItems = computed(() => data.value.total ?? []);
 
+const fechaFormateada = ref(null);
+
 // 👉 Store
 const searchQuery = ref('')
 const selectedRole = ref()
@@ -328,7 +330,7 @@ const goToDetail = (id) => {
 const obtenerZonas = async () => {
 
     try {
-        const response = await useApi(`/zonas`, paramsForm);
+        const response = await useApi(`/zonas`, paramsForm.value);
         console.log('zonas: ', response.data.value);
         zonas.value.push(...response.data.value);
         filtros.value.zona = zonas.value[0]?.idZona || null;
@@ -340,9 +342,9 @@ const obtenerZonas = async () => {
 }
 
 const obtenerRutas = async () => {
-
+    console.log('parametros de ruta: ', paramsForm.value);
     try {
-        const response = await useApi(`/rutas`, paramsForm);
+        const response = await useApi('rutas', {query: paramsForm.value});
         console.log('rutas: ', response.data.value);
         rutas.value.push(...response.data.value);
         filtros.value.ruta = rutas.value[0]?.idRuta || null;
@@ -378,7 +380,7 @@ const convertirFecha = (fecha) => {
 };
 
 onMounted(async () => {
-    //filtros.value.fecha = convertirFecha(user.value.fecha);
+    fechaFormateada.value = convertirFecha(user.value.fecha);
     filtros.value = {
         idEmpresa: user.value.idEmpresa,
         idSucursal: user.value.idSucursal,
@@ -452,7 +454,7 @@ onMounted(async () => {
                         sm="3"
                     >
                         <AppDateTimePicker
-                            v-model="filtros.fecha"
+                            v-model="fechaFormateada"
                             label="Fecha"
                             placeholder="Seleccionar Fecha"
                             disabled
