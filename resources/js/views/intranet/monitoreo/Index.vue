@@ -484,7 +484,7 @@ onMounted(async () => {
                             fixed-header
                         >
                             <!-- User -->
-                            <template #item.user="{ item }">
+                            <!-- <template #item.user="{ item }">
                                 <div class="d-flex align-center gap-x-4">
                                     <VAvatar
                                     size="34"
@@ -510,6 +510,19 @@ onMounted(async () => {
                                         {{ item.email }}
                                     </div>
                                     </div>
+                                </div>
+                            </template> -->
+
+                            <!-- 👉 Role -->
+                            <template #item.clientes="{ item }">
+                                <div class="d-flex align-center gap-x-2">
+                                    {{item.clientes}}
+                                </div>
+                            </template>
+
+                            <template #item.atendidos="{ item }">
+                                <div class="d-flex align-center gap-x-2">
+                                    {{parseInt(item.noCompra) + parseInt(item.cantidadVenta)}}
                                 </div>
                             </template>
 

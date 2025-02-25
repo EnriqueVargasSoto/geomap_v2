@@ -62,18 +62,21 @@ class MonitoreoController extends Controller
 
     public function gestionInicializaTabla(){
         $headers = [
-            ['title' => 'Jefe de Unidad de Negocio', 'key' => 'nombrex', 'sortable' => true, 'fixed' => 'start'],
-            ['title' => 'Teléfono', 'key' => 'telefonox', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Zona', 'key' => 'zona', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Ruta', 'key' => 'ruta', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos', 'key' => 'clientes', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos Atendidos', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos Atendidos %', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
-
+            ['title' => 'Jefe de Unidad de Negocio', 'key' => 'nombrex', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Teléfono', 'key' => 'telefonox', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Zona', 'key' => 'zona', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Ruta', 'key' => 'ruta', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos', 'key' => 'clientes', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos', 'key' => 'atendidos', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos %', 'key' => 'atendidosPorcentaje', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos sin Venta', 'key' => 'atendidosNoVenta', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos sin Venta %', 'key' => 'atendido_no_ventas_porcentaje', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos con Venta', 'key' => 'atendidos_ventas', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos con venta %', 'key' => 'atendidos_ventas_porcentaje', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Estado', 'key' => 'estado', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Importe', 'key' => 'importe', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Drop Soles', 'key' => 'drop', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Acciones', 'key' => 'acciones', 'sortable' => true, 'fixed' => false],
         ];
 
         $buttons = [
@@ -105,11 +108,20 @@ class MonitoreoController extends Controller
     public function cobranzaInicializaTabla(){
         $headers = [
             ['title' => 'Jefe de Unidad de Negocio', 'key' => 'nombrex', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Teléfono', 'key' => 'telefonox', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Zona', 'key' => 'zona', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Ruta', 'key' => 'ruta', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos', 'key' => 'clientes', 'sortable' => true, 'fixed' => true],
-            ['title' => 'Establecimientos Atendidos', 'key' => 'efectivos', 'sortable' => true, 'fixed' => true],
+            ['title' => 'Teléfono', 'key' => 'telefonox', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Zona', 'key' => 'zona', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Ruta', 'key' => 'ruta', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos', 'key' => 'clientes', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos', 'key' => 'atendidos', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos %', 'key' => 'atendidosPorcentaje', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos sin Venta', 'key' => 'atendidosNoVenta', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos sin Venta %', 'key' => 'atendido_no_ventas_porcentaje', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos con Venta', 'key' => 'atendidos_ventas', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Establecimientos Atendidos con venta %', 'key' => 'atendidos_ventas_porcentaje', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Estado', 'key' => 'estado', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Importe', 'key' => 'importe', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Drop Soles', 'key' => 'drop', 'sortable' => true, 'fixed' => false],
+            ['title' => 'Acciones', 'key' => 'acciones', 'sortable' => true, 'fixed' => false],
         ];
 
         $buttons = [
