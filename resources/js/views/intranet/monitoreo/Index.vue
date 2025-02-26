@@ -285,7 +285,10 @@ const fetchInitTableCobranza = async() => {
     }
 }
 
-
+// abrir modal
+const openModal = (data) => {
+  console.log('modal', data);
+};
 
 // Función para convertir "DD/MM/YYYY" a "YYYY-MM-DD"
 const convertirFecha = (fecha) => {
@@ -483,125 +486,107 @@ onMounted(async () => {
                             @update:options="updateOptions"
                             fixed-header
                         >
-                            <!-- User -->
-                            <!-- <template #item.user="{ item }">
-                                <div class="d-flex align-center gap-x-4">
-                                    <VAvatar
-                                    size="34"
-                                    :variant="!item.avatar ? 'tonal' : undefined"
-                                    :color="!item.avatar ? resolveUserRoleVariant(item.role).color : undefined"
-                                    >
-                                    <VImg
-                                        v-if="item.avatar"
-                                        :src="item.avatar"
-                                    />
-                                    <span v-else>{{ avatarText(item.fullName) }}</span>
-                                    </VAvatar>
-                                    <div class="d-flex flex-column">
-                                    <h6 class="text-base">
-                                        <RouterLink
 
-                                        class="font-weight-medium text-link"
-                                        >
-                                        {{ item.fullName }}
-                                        </RouterLink>
-                                    </h6>
-                                    <div class="text-sm">
-                                        {{ item.email }}
-                                    </div>
-                                    </div>
-                                </div>
-                            </template> -->
-
-                            <!-- 👉 Role -->
                             <template #item.clientes="{ item }">
-                                <div class="d-flex align-center gap-x-2">
-                                    {{item.clientes}}
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    <a href="#" class="text-primary text-decoration-underline" @click.prevent="openModal(item)">
+                                        {{ item.clientes }}
+                                    </a>
                                 </div>
                             </template>
 
-                            <template #item.atendidos="{ item }">
-                                <div class="d-flex align-center gap-x-2">
+                            <template #item.atendidos="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
                                     {{parseInt(item.noCompra) + parseInt(item.cantidadVenta)}}
                                 </div>
                             </template>
 
-                            <!-- 👉 Role -->
-                            <template #item.role="{ item }">
-                                <div class="d-flex align-center gap-x-2">
-                                    <VIcon
-                                    :size="22"
-                                    :icon="resolveUserRoleVariant(item.role).icon"
-                                    :color="resolveUserRoleVariant(item.role).color"
-                                    />
-
-                                    <div class="text-capitalize text-high-emphasis text-body-1">
-                                    {{ item.role }}
-                                    </div>
+                            <template #item.atendidosPorcentaje="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    {{ Math.round(((parseInt(item.noCompra) + parseInt(item.cantidadVenta)) / parseInt(item.clientes)) * 100) / 100 }}%
                                 </div>
                             </template>
 
-                            <!-- Plan -->
-                            <template #item.plan="{ item }">
-                                <div class="text-body-1 text-high-emphasis text-capitalize">
-                                    {{ item.currentPlan }}
+                            <template #item.atendidosNoVentas="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    {{item.noCompra}}
                                 </div>
                             </template>
 
-                            <!-- Status -->
-                            <template #item.status="{ item }">
-                                <VChip
-                                    :color="resolveUserStatusVariant(item.status)"
-                                    size="small"
-                                    label
-                                    class="text-capitalize"
-                                >
-                                    {{ item.status }}
-                                </VChip>
+                            <template #item.atendidosNoVentasPorcentaje="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    {{ Math.round((parseInt(item.noCompra) / parseInt(item.clientes)) * 100) / 100 }}%
+                                </div>
                             </template>
+
+                            <template #item.atendidosVentas="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    {{item.efectivos}}
+                                </div>
+                            </template>
+
+                            <template #item.atendidosVentasPorcentaje="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    {{ Math.round((parseInt(item.efectivos) / parseInt(item.clientes)) * 100) / 100 }}%
+                                </div>
+                            </template>
+
+                            <template #item.estado="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    {{item.estadoVendedor}}
+                                </div>
+                            </template>
+
+                            <template #item.importe="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    {{item.importeVentasx}}
+                                </div>
+                            </template>
+
+                            <template #item.drop="{ item }" style="text-align: center;">
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    {{item.importeVentasx}}
+                                    {{ Math.round((parseInt('0'+item.importeVentasx) / (parseInt(item.noCompra) / parseInt(item.clientes))) * 100) / 100 }}%
+                                </div>
+                            </template>
+
 
                             <!-- Actions -->
-                            <template #item.actions="{ item }">
-                                <!-- <IconBtn @click="deleteUser(item.id)">
-                                    <VIcon icon="tabler-trash" />
-                                </IconBtn>
+                            <template #item.acciones="{ item }" >
+                                <div class="d-flex align-center gap-x-2" style="justify-content: center;">
+                                    <VBtn
+                                        icon
+                                        variant="text"
+                                        color="medium-emphasis"
+                                    >
+                                        <VIcon icon="tabler-dots-vertical" />
+                                        <VMenu activator="parent">
+                                        <VList>
+                                            <VListItem >
+                                            <template #prepend>
+                                                <VIcon icon="tabler-eye" />
+                                            </template>
 
-                                <IconBtn>
-                                    <VIcon icon="tabler-eye" />
-                                </IconBtn> -->
+                                            <VListItemTitle>View</VListItemTitle>
+                                            </VListItem>
 
-                                <VBtn
-                                    icon
-                                    variant="text"
-                                    color="medium-emphasis"
-                                >
-                                    <VIcon icon="tabler-dots-vertical" />
-                                    <VMenu activator="parent">
-                                    <VList>
-                                        <VListItem >
-                                        <template #prepend>
-                                            <VIcon icon="tabler-eye" />
-                                        </template>
+                                            <VListItem :to="{ name: 'preventa', params: { id: 123 } }">
+                                            <template #prepend>
+                                                <VIcon icon="tabler-map" />
+                                            </template>
+                                            <VListItemTitle>Edit</VListItemTitle>
+                                            </VListItem>
 
-                                        <VListItemTitle>View</VListItemTitle>
-                                        </VListItem>
-
-                                        <VListItem :to="{ name: 'preventa', params: { id: 123 } }">
-                                        <template #prepend>
-                                            <VIcon icon="tabler-map" />
-                                        </template>
-                                        <VListItemTitle>Edit</VListItemTitle>
-                                        </VListItem>
-
-                                        <VListItem @click="deleteUser(item.id)">
-                                        <template #prepend>
-                                            <VIcon icon="tabler-tag" />
-                                        </template>
-                                        <VListItemTitle>Delete</VListItemTitle>
-                                        </VListItem>
-                                    </VList>
-                                    </VMenu>
-                                </VBtn>
+                                            <VListItem @click="deleteUser(item.id)">
+                                            <template #prepend>
+                                                <VIcon icon="tabler-tag" />
+                                            </template>
+                                            <VListItemTitle>Delete</VListItemTitle>
+                                            </VListItem>
+                                        </VList>
+                                        </VMenu>
+                                    </VBtn>
+                                </div>
                             </template>
 
                             <!-- pagination -->

@@ -116,6 +116,16 @@ return [
             ], */
         ],
 
+        'odbc' => [
+            'driver'   => 'odbc',
+            'dsn'      => env('DB_ODBC_DSN', 'sqlserver'),
+            'database' => env('DB_DATABASE'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+            'prefix'   => '',
+        ],
+
+
         /* 'options' => [
             PDO::ATTR_EMULATE_PREPARES => true,
             PDO::SQLSRV_ATTR_QUERY_TIMEOUT => 5, // Opcional, ajusta el tiempo de espera
