@@ -1,18 +1,30 @@
 <script setup>
+import ModalClient from './modales/modalClient.vue';
+import ModalRubro from './modales/modalRubro.vue';
+
 /* import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue' */
 
 // TODO: Get type from backend
 
 //!SECTION filtros
 
+const isDialogVisible = ref(false);
+const isDialogVisibleRubro = ref(false);
+const modalData = reactive({
+  dato: null, // Aquí se guardará el objeto de la fila seleccionada
+});
+const modalDataRubro = reactive({
+  dato: null, // Aquí se guardará el objeto de la fila seleccionada
+});
+
 const user = useCookie('userData')
+
 const paramsForm = ref({
     idEmpresa : null,
 	idSucursal : null,
     idPersona : null,
     zona: null
 });
-
 
 const filtros = ref({
     idEmpresa: null,
@@ -25,6 +37,7 @@ const filtros = ref({
     page: null,
     per_page: null,
 });
+
 const zonas = ref([
     {idZona: 'all', descripcion: 'Todos'}
 ]);
@@ -33,24 +46,16 @@ const rutas = ref([
 ]);
 
 const headersGestion = ref([]);
-const headersCobranza = ref([]);
 const itemsPerPage = ref(10)
-const itemsPerPageCobranza = ref(10)
 const page = ref(1)
-const pageCobranza = ref(1)
 const check = ref(false);
-const checkCobranza = ref(false);
 const items_selects = ref([]);
-const items_selectsCobranza = ref([]);
 
 const { data } = await useApi(createUrl('gestion', {query: filtros}));
-const { dataCobranza } = ref();//await useApi(createUrl('gestion', {query: filtros}));
 
 const tableData = computed(() => data.value.data ?? []);
-const tableDataCobranza = ref([]);// computed(() => data.value.data ?? []);
 
 const totalItems = computed(() => data.value.recordsTotal ?? []);
-const totalItemsCobranza = ref(0);//computed(() => data.value.total ?? []);
 
 const fechaFormateada = ref(null);
 
@@ -68,144 +73,7 @@ const updateOptions = options => {
   orderBy.value = options.sortBy[0]?.order
 }
 
-// Headers
-const headers = [
-  {
-    title: 'Jefe de Unidad de Negocio',
-    key: 'user',
-  },
-  {
-    title: 'Teléfono',
-    key: 'role',
-  },
-  {
-    title: 'Zona',
-    key: 'plan',
-  },
-  {
-    title: 'Ruta',
-    key: 'billing',
-  },
-  {
-    title: 'Establecimientos',
-    key: 'status',
-  },
-  {
-    title: 'Establecimientos Atendidos',
-    key: 'status',
-  },
-  {
-    title: 'Establecimientos Efectivos %',
-    key: 'status',
-  },
-  {
-    title: 'Establecimientos no Atendidos',
-    key: 'status',
-  },
-  {
-    title: 'Establecimientos no Atendidos %',
-    key: 'status',
-  },
-  {
-    title: 'Establecimientos sin Visita',
-    key: 'status',
-  },
-  {
-    title: 'Establecimientos sin Visita %',
-    key: 'status',
-  },
-  {
-    title: 'Estado',
-    key: 'status',
-  },
-  {
-    title: 'Cantidad Licencias',
-    key: 'status',
-  },
-  {
-    title: 'Importe Total',
-    key: 'status',
-  },
-  {
-    title: 'Drop Licencias',
-    key: 'status',
-  },
-  {
-    title: 'Drop Soles',
-    key: 'status',
-  },
-  {
-    title: 'Visitados',
-    key: 'status',
-  },
-  {
-    title: 'Acciones',
-    key: 'actions',
-    sortable: false,
-  },
-]
-
-
-
-
-
-const resolveUserRoleVariant = role => {
-  const roleLowerCase = role.toLowerCase()
-  if (roleLowerCase === 'subscriber')
-    return {
-      color: 'success',
-      icon: 'tabler-user',
-    }
-  if (roleLowerCase === 'author')
-    return {
-      color: 'error',
-      icon: 'tabler-device-desktop',
-    }
-  if (roleLowerCase === 'maintainer')
-    return {
-      color: 'info',
-      icon: 'tabler-chart-pie',
-    }
-  if (roleLowerCase === 'editor')
-    return {
-      color: 'warning',
-      icon: 'tabler-edit',
-    }
-  if (roleLowerCase === 'admin')
-    return {
-      color: 'primary',
-      icon: 'tabler-crown',
-    }
-
-  return {
-    color: 'primary',
-    icon: 'tabler-user',
-  }
-}
-
-const resolveUserStatusVariant = stat => {
-  const statLowerCase = stat.toLowerCase()
-  if (statLowerCase === 'pending')
-    return 'warning'
-  if (statLowerCase === 'active')
-    return 'success'
-  if (statLowerCase === 'inactive')
-    return 'secondary'
-
-  return 'primary'
-}
-
 const isAddNewUserDrawerVisible = ref(false)
-
-const addNewUser = async userData => {
-  await $api('/apps/users', {
-    method: 'POST',
-    body: userData,
-  })
-
-  // Refetch User
-  fetchUsers()
-}
 
 const deleteUser = async id => {
   await $api(`/apps/users/${ id }`, { method: 'DELETE' })
@@ -285,9 +153,18 @@ const fetchInitTableCobranza = async() => {
     }
 }
 
-// abrir modal
-const openModal = (data) => {
-  console.log('modal', data);
+
+
+// Función para abrir el modal con los datos de una fila
+const openModal = (rowData) => {
+  modalData.dato = rowData;
+  isDialogVisible.value = true;
+};
+
+const openModalRubro = (rowData) => {
+    console.log('ingresa a abrir rubros');
+  modalDataRubro.dato = rowData;
+  isDialogVisibleRubro.value = true;
 };
 
 // Función para convertir "DD/MM/YYYY" a "YYYY-MM-DD"
@@ -324,6 +201,15 @@ onMounted(async () => {
     await obtenerZonas();
     await obtenerRutas();
 });
+
+// Función para cerrar el modal
+const closeModal = () => {
+  isDialogVisible.value = false;
+};
+
+const closeModalRubro = () => {
+  isDialogVisibleRubro.value = false;
+};
 </script>
 
 <template>
@@ -574,14 +460,14 @@ onMounted(async () => {
                                             <template #prepend>
                                                 <VIcon icon="tabler-map" />
                                             </template>
-                                            <VListItemTitle>Edit</VListItemTitle>
+                                            <VListItemTitle>Mapa</VListItemTitle>
                                             </VListItem>
 
-                                            <VListItem @click="deleteUser(item.id)">
+                                            <VListItem @click="openModalRubro(item)">
                                             <template #prepend>
                                                 <VIcon icon="tabler-tag" />
                                             </template>
-                                            <VListItemTitle>Delete</VListItemTitle>
+                                            <VListItemTitle>Rubros</VListItemTitle>
                                             </VListItem>
                                         </VList>
                                         </VMenu>
@@ -617,6 +503,21 @@ onMounted(async () => {
         </VCard>
 
     </section>
+
+    <ModalClient
+        v-if="isDialogVisible"
+        :isDialogVisible="isDialogVisible"
+        :dato="modalData.dato"
+        @close="closeModal"
+    />
+
+    <ModalRubro
+        v-if="isDialogVisibleRubro"
+        :isDialogVisible="isDialogVisibleRubro"
+        :dato="modalDataRubro.dato"
+        @close="closeModalRubro"
+    />
+
 </template>
 
 <style scoped>

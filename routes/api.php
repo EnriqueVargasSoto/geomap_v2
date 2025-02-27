@@ -19,8 +19,12 @@ Route::apiResource('zonas', ZonaController::class);
 Route::apiResource('rutas', RutaController::class);
 
 Route::get('gestion', [MonitoreoController::class, 'index']);
+Route::get('clientes-por-vendedor', [MonitoreoController::class, 'obtenerClientesxVendedor']);
+Route::get('vistaxsegmento', [MonitoreoController::class, 'obtenerVistaxSegmento']);
 
 Route::get('gestion-inicializa-tabla', [MonitoreoController::class, 'gestionInicializaTabla']);
 Route::get('cobranza-inicializa-tabla', [MonitoreoController::class, 'cobranzaInicializaTabla']);
+Route::get('clientes-inicializa-tabla', [MonitoreoController::class, 'clientesInicializaTabla']);
+Route::get('segmentos-inicializa-tabla', [MonitoreoController::class, 'segmentosInicializaTabla']);
 
 Route::get('apps/users', [EmpresaController::class, 'usuarios']);
