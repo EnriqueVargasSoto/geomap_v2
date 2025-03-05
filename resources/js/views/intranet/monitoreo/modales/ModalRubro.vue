@@ -252,3 +252,15 @@
         </VCard>
     </VDialog>
 </template>
+<style scoped>
+:deep(.v-table__wrapper thead tr th) {
+        background-color: #605ca8 !important;
+        background: #605ca8 !important;
+    }
+
+    :deep(.v-table__wrapper th) {
+        color: white !important;
+        font-weight: bold !important;
+        text-align: center;
+    }
+</style>

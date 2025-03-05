@@ -93,6 +93,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
             <h1
               v-show="!hideTitleAndIcon"
               class="app-logo-title"
+              style="color: white;"
             >
               {{ layoutConfig.app.title }}
             </h1>
@@ -185,6 +186,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
   inset-inline-start: 0;
   transition: inline-size 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
   will-change: transform, inline-size;
+  background-color: #222d32!important;
 
   .nav-header {
     display: flex;

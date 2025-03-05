@@ -367,7 +367,7 @@ const closeModalRubro = () => {
                             item-value="id"
                             :items-length="totalItems"
                             :headers="headersGestion"
-                            class="text-no-wrap"
+                            class="text-no-wrap custom-table"
                             :show-select ="check"
                             @update:options="updateOptions"
                             fixed-header
@@ -523,12 +523,24 @@ const closeModalRubro = () => {
 <style scoped>
     .v-data-table th.fixed-start,
     .v-data-table td.fixed-start {
-    position: sticky;
-    left: 0;
-    z-index: 11; /* Asegura que esté por encima de otras columnas */
-    background: white; /* Mantiene el fondo fijo */
+        position: sticky;
+        left: 0;
+        z-index: 11; /* Asegura que esté por encima de otras columnas */
+        background: #605ca8 !important; /* Mantiene el fondo fijo */
     }
     .v-data-table thead tr th {
-    z-index: 10;
+        z-index: 10;
     }
+
+    :deep(.v-table__wrapper thead tr th) {
+        background-color: #605ca8 !important;
+        background: #605ca8 !important;
+    }
+
+    :deep(.v-table__wrapper th) {
+        color: white !important;
+        font-weight: bold !important;
+        text-align: center;
+    }
+
 </style>

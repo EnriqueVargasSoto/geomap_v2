@@ -148,7 +148,7 @@ const userProfileList = [
           </VListItem>
 
           <PerfectScrollbar :options="{ wheelPropagation: false }">
-            <template
+            <!-- <template
               v-for="item in userProfileList"
               :key="item.title"
             >
@@ -181,7 +181,7 @@ const userProfileList = [
                 v-else
                 class="my-2"
               />
-            </template>
+            </template> -->
 
             <div class="px-4 py-2">
               <VBtn
