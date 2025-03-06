@@ -50,10 +50,10 @@ export const routes = [
         meta: { requiresAuth: true } // Ruta protegida
     },
     {
-        path: '/monitoreo/preventa/:id', // 📌 Asegúrate de que la ruta sea correcta
+        path: '/monitoreo/preventa', // 📌 Asegúrate de que la ruta sea correcta
         name: 'preventa',
         component: () => import('@/views/intranet/preventa/Index.vue'),//Dashboard,//DashboardAnalytics
         props: true, // Esto permite recibir parámetros como props
-        meta: { requiresAuth: true } // Ruta protegida
+        meta: { requiresAuth: true, navActiveLink: "monitoreo" } // Ruta protegida
     }
 ];

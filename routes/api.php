@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EmpresaController;
+use App\Http\Controllers\Api\MapaController;
 use App\Http\Controllers\Api\MonitoreoController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\ZonaController;
@@ -28,3 +29,8 @@ Route::get('clientes-inicializa-tabla', [MonitoreoController::class, 'clientesIn
 Route::get('segmentos-inicializa-tabla', [MonitoreoController::class, 'segmentosInicializaTabla']);
 
 Route::get('apps/users', [EmpresaController::class, 'usuarios']);
+
+
+
+Route::get('clientes', [MapaController::class,'obtenerDatosCliente']);
+Route::get('geocercas', [MapaController::class, 'obtenerGeocercas']);

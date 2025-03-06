@@ -1,19 +1,72 @@
 <script setup>
 import { GoogleMap, Marker } from 'vue3-google-map'
 
-const center = { lat: 40.689247, lng: -74.044502 }
+const geoJsonData = ref(null);
 
-const selected = ref(['check1', 'check2', 'check3', 'check4'])
+const user = useCookie('userData')
+const router = useRouter()
+
+// const center = { lat: 40.689247, lng: -74.044502 }
+
+const selected = ref(['003', '001', '002', '007'])
 const selectedAtendidos = ref(['1', '0'])
 const selectedOtros = ref([])
 
 // Grupo 1 - Checkboxes
 const grupo1 = ref([
-  { label: 'Espectaculos', value: 'check1' },
-  { label: 'Locales Permanente', value: 'check2' },
-  { label: 'Bailes', value: 'check3' },
-  { label: 'Mixto', value: 'check4' }
+  { label: 'Espectaculos', value: '003' },
+  { label: 'Locales Permanente', value: '001' },
+  { label: 'Bailes', value: '002' },
+  { label: 'Mixto', value: '007' }
 ]);
+
+
+const loadGeoJson = async () => {
+  //if (!mapRef.value) return;
+
+  //const map = mapRef.value.$map;
+  const dataLayer = new google.maps.Data({ map });
+
+  // Cargar la geocerca desde tu JSON
+  dataLayer.addGeoJson({
+    type: "FeatureCollection",
+    name: "2031",
+    features: [
+      {
+        type: "Feature",
+        properties: {
+          RUTA: "2031",
+        },
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [-77.007529, -12.08888],
+              [-77.007659, -12.088898],
+              [-77.008612, -12.08904],
+              [-77.009293, -12.089136],
+              [-77.020197, -12.090517],
+              [-77.021764, -12.0912],
+              [-77.022195, -12.093157],
+              [-77.018743, -12.101992],
+              [-77.016087, -12.107483],
+              [-77.015679, -12.107953],
+              [-77.012704, -12.098949],
+              [-77.007529, -12.08888], // 🔹 Cerrar el polígono
+            ],
+          ],
+        },
+      },
+    ],
+  });
+
+  // Estilo opcional para la geocerca
+  dataLayer.setStyle({
+    fillColor: "red",
+    strokeColor: "black",
+    strokeWeight: 2,
+  });
+};
 
 // Grupo 1 - Checkboxes
 const grupo2 = ref([
@@ -55,13 +108,165 @@ const desserts = [
     fat: 6,
   },
 ]
+
+// 🔹 Lista de objetos con coordenadas
+const locations = ref([]);
+
+const paramsForm = ref({
+    idEmpresa: null,
+    idSucursal: null,
+    idSupervisor: null,
+    zona: null,
+    ruta: null,
+    fecha: null,
+    vendedor: null,
+    rubros: selected.value.join(",")
+});
+
+const fetchLocations = async () => {
+  try {
+    const {data} = await useApi(createUrl('/clientes', {query: paramsForm})); // 🔹 Reemplaza con tu URL de API
+    locations.value = data.value; // Suponiendo que la API devuelve un array de ubicaciones
+
+    await fetchGeocerca();
+
+    //await loadGeoJson();
+  } catch (error) {
+    console.error("Error obteniendo ubicaciones:", error);
+  }
+};
+
+const fetchGeocerca= async () => {
+  try {
+    const {data} = await useApi(createUrl('/geocercas', {query: paramsForm})); // 🔹 Reemplaza con tu URL de API
+
+    geoJsonData.value = JSON.parse(data.value[0].DatosJSON);
+    console.log('GeoJSON cargado:', geoJsonData.value);
+    await initMap(); // Llamamos a la función para inicializar el mapa una vez que tenemos los datos
+  } catch (error) {
+    console.error("Error obteniendo ubicaciones:", error);
+  }
+};
+
+// 📌 Función para obtener iconos desde public/icons/
+const getIconByRubro = (rubro, estado) => {
+  const iconBase = "/icons/"; // Ruta desde public/
+  if (rubro == "001" && estado == "0") {
+        return `${iconBase}lp-001.png`;
+  };
+
+  if (rubro == "001" && estado == "1") {
+        return `${iconBase}lp-002.png`;
+  }
+
+  if (rubro == "002" && estado == "0") {
+        return `${iconBase}ba-001.png`;
+  }
+
+  if (rubro == "002" && estado == "1") {
+        return `${iconBase}ba-002.png`;
+  }
+
+  if (rubro == "003" && estado == "0") {
+        return `${iconBase}es-001.png`;
+  }
+
+  if (rubro == "003" && estado == "1") {
+        return `${iconBase}es-002.png`;
+  }
+  if (rubro == "007" && estado == "0") {
+        return `${iconBase}mi-001.png`;
+  }
+
+  if (rubro == "007" && estado == "1") {
+        return `${iconBase}mi-002.png`;
+  }
+
+  return `${iconBase}oportunidad.png`;
+};
+
+const initMap = async () => {
+  if (locations.value.length === 0) return; // No hacer nada si no hay ubicaciones
+
+  // 🌎 Tomamos la primera ubicación como centro del mapa
+  const center = {
+    lat: parseFloat(locations.value[0].latitudCliente),
+    lng: parseFloat(locations.value[0].longitudCliente),
+  };
+
+  // 🗺️ Crear el mapa en el div con ID "map"
+  const map = new google.maps.Map(document.getElementById("map"), {
+    center,
+    zoom: 14, // Ajusta el zoom según la cantidad de ubicaciones
+  });
+
+  if (geoJsonData.value != null) {
+    const dataLayer = new google.maps.Data({ map });
+
+
+    dataLayer.addGeoJson(geoJsonData.value)
+
+    // Estilo opcional para la geocerca
+    dataLayer.setStyle({
+        fillColor: "red",
+        strokeColor: "red",
+        strokeWeight: 2,
+    });
+  }
+
+  // 📍 Agregar marcadores con los datos de la API
+  locations.value.forEach((loc) => {
+    const marker = new google.maps.Marker({
+      position: { lat: parseFloat(loc.latitudCliente), lng: parseFloat(loc.longitudCliente) },
+      map,
+      title: loc.nombre,
+      icon: {
+        url: getIconByRubro(loc.rubro, loc.estado_rubro.trim()), // Usa la URL relativa desde public/
+        scaledSize: new google.maps.Size(10, 10),
+      },
+    });
+
+    // 🏷️ Agregar ventana de información
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<strong>${loc.nombre}</strong><br>${loc.direccion}`,
+    });
+
+    marker.addListener("click", () => {
+      infoWindow.open(map, marker);
+    });
+  });
+};
+
+// Observar cambios en checkboxes y actualizar mapa
+watch([selected, selectedAtendidos, selectedOtros], async () => {
+  paramsForm.value.rubros = selected.value.join(",")
+  await fetchLocations()
+})
+
+const data = ref(null);
+onMounted(async () => {
+    data.value = history.state.data; // Accede a los datos
+    console.log('Datos recibidos:', data.value);
+    console.log('Datos recibidos:', data);
+    paramsForm.value = {
+        idEmpresa: user.value.idEmpresa,
+        idSucursal: user.value.idSucursal,
+        idSupervisor: user.value.idUsuario,
+        zona: data.value.zona,
+        ruta: data.value.ruta,
+        fecha: user.value.fecha,
+        vendedor: data.value.vendedorx,
+        rubros: selected.value.join(",")
+    }
+  await fetchLocations();
+});
 </script>
 
 <template>
     <section>
         <div class="page-container">
                 <VRow class="mb-6">
-                    <VCol cols="12" sm="4">
+                    <VCol cols="12" sm="6">
                         <VExpansionPanels multiple>
                             <VExpansionPanel
                             >
@@ -105,7 +310,7 @@ const desserts = [
                             </VExpansionPanel>
                         </VExpansionPanels>
                     </VCol>
-                    <VCol cols="12" sm="4">
+                    <!-- <VCol cols="12" sm="4">
                         <VExpansionPanels multiple>
                             <VExpansionPanel
                             >
@@ -117,8 +322,8 @@ const desserts = [
                                 </VExpansionPanelText>
                             </VExpansionPanel>
                         </VExpansionPanels>
-                    </VCol>
-                    <VCol cols="12" sm="4">
+                    </VCol> -->
+                    <VCol cols="12" sm="6">
                         <VExpansionPanels multiple>
                             <VExpansionPanel
 
@@ -172,13 +377,15 @@ const desserts = [
             <VCard class="mb-6 third-card">
 
                 <GoogleMap
+                        id="map"
+                        ref="mapRef"
                         api-key="AIzaSyA2PCkdFyC80CvWLpRPom2K5iIZ3u885sc"
                         style="width: 100%; height: 65vh;"
                         :center="center"
                         :zoom="15"
                     >
 
-                        <Marker :options="{ position: center }" />
+                        <!-- <Marker :options="{ position: center }" /> -->
                     </GoogleMap>
             </VCard>
 

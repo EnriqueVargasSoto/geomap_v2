@@ -19,6 +19,8 @@ const modalDataRubro = reactive({
 
 const user = useCookie('userData')
 
+const router = useRouter()
+
 const paramsForm = ref({
     idEmpresa : null,
 	idSucursal : null,
@@ -90,8 +92,9 @@ const deleteUser = async id => {
 
 const currentTab = ref('item-1')
 
-const goToDetail = (id) => {
-    router.push({ name: 'monitoreo/preventa', params: { id } });
+const goToDetail = (row) => {
+    //sessionStorage.setItem('params', JSON.stringify({ id: 123, nombre: 'Ejemplo' }))
+    router.push({ name: 'preventa', state: { data: row} });
 };
 
 
@@ -456,11 +459,11 @@ const closeModalRubro = () => {
                                             <VListItemTitle>View</VListItemTitle>
                                             </VListItem>
 
-                                            <VListItem :to="{ name: 'preventa', params: { id: 123 } }">
-                                            <template #prepend>
-                                                <VIcon icon="tabler-map" />
-                                            </template>
-                                            <VListItemTitle>Mapa</VListItemTitle>
+                                            <VListItem @click="goToDetail(item)">
+                                                <template #prepend>
+                                                    <VIcon icon="tabler-map" />
+                                                </template>
+                                                <VListItemTitle>Mapa</VListItemTitle>
                                             </VListItem>
 
                                             <VListItem @click="openModalRubro(item)">
