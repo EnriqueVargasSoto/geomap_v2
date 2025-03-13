@@ -9,7 +9,9 @@ use Illuminate\Notifications\Notifiable;
 
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     /* use HasFactory, Notifiable; */
@@ -79,5 +81,17 @@ class User extends Authenticatable
     public function scopeEliminated($query)
     {
         return $query->where('deleted',0);
+    }
+
+
+    // Métodos requeridos por JWTSubject
+    public function getJWTIdentifier()
+    {
+        return $this->getKey(); // Normalmente devuelve el id del usuario
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return []; // Puedes agregar claims personalizados aquí si los necesitas
     }
 }

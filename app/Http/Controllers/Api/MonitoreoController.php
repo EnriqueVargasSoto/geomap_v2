@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Database\QueryException;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PedidosExport;
 
 class MonitoreoController extends Controller
 {
@@ -26,6 +29,8 @@ class MonitoreoController extends Controller
         $fecha = $request->fecha;
 		$idVendedor = $request->idVendedor;
 
+        $search = $request->input('search', null); // Obtener el término de búsqueda
+
         $page = $request->input('page', 1); // Página actual (por defecto 1)
         $perPage = $request->input('per_page', 10); // Elementos por página (por defecto 10)
 
@@ -39,6 +44,17 @@ class MonitoreoController extends Controller
 				if($item->vendedorx == null){
 					return  response()->json( $item );
 				}else{
+
+                    // Si existe un término de búsqueda, filtrar la lista
+                    if (!is_null($search)) {
+                        $lista = array_filter($lista, function ($item) use ($search) {
+                            return stripos($item->nombrex, $search) !== false;
+                        });
+
+                        // Convertir a array indexado nuevamente
+                        $lista = array_values($lista);
+                    }
+
                     $total = count($lista); // Total de registros
                     $offset = ($page - 1) * $perPage; // Calcular desde qué registro empezar
                     //return response()->json($offset);
@@ -280,5 +296,33 @@ class MonitoreoController extends Controller
         ];
 
         return response()->json(['data' => $data]);
+    }
+
+    public function reporteTodosVendedoresPedidos(Request $request)
+    {
+        $idEmpresa = $request->idEmpresa;
+        $idSucursal = $request->idSucursal;
+        $fecha = $request->fecha;
+        $guia = $request->guia;
+        $idSupervisor = $request->idSupervisor;
+
+        $datos = DB::select("exec web_obtenerReporteTodosPedidos ?,?,?,?,?", [$idEmpresa, $idSucursal, $fecha, $idSupervisor, $guia]);
+
+        $data = [];
+        $cabecera = ['Vendedor', 'Zona', 'Ruta', 'Modulo', 'Clientes', 'Dirección', 'Hora Inicio', 'Tiempo Pedido', 'Fecha Entrega', 'Cantidad Venta', 'Cajas(ERP)', 'Importe Total'];
+        array_push($data, $cabecera);
+
+        foreach ($datos as $item) {
+            $data[] = [
+                $item->nombre, $item->idZona, $item->idRuta, $item->idModulo,
+                $item->cliente, $item->direccion, $item->hora, $item->tiempoPedido,
+                $item->fechaEntrega, $item->cantidad, $item->cajas, $item->importeTotal
+            ];
+        }
+
+        $mytime = Carbon::now();
+        $nombreReporte = "detalle_pedidos_{$guia}_xvendedor_{$mytime->format('Ymd_His')}.xlsx";
+
+        return Excel::download(new PedidosExport($data), $nombreReporte);
     }
 }

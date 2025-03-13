@@ -9,9 +9,9 @@ use App\Http\Controllers\ZonaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
 Route::post('login', [AuthController::class, 'login']);
 
@@ -28,9 +28,16 @@ Route::get('cobranza-inicializa-tabla', [MonitoreoController::class, 'cobranzaIn
 Route::get('clientes-inicializa-tabla', [MonitoreoController::class, 'clientesInicializaTabla']);
 Route::get('segmentos-inicializa-tabla', [MonitoreoController::class, 'segmentosInicializaTabla']);
 
+Route::get('export-excel', [MonitoreoController::class, 'reporteTodosVendedoresPedidos']);
+
 Route::get('apps/users', [EmpresaController::class, 'usuarios']);
 
 
 
 Route::get('clientes', [MapaController::class,'obtenerDatosCliente']);
 Route::get('geocercas', [MapaController::class, 'obtenerGeocercas']);
+
+Route::middleware('auth:api')->group(function () {
+
+
+});

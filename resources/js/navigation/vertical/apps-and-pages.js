@@ -167,10 +167,19 @@ export default [
     ]
   }, */
   {
-    title: 'monitoreo',
+    title: 'Monitoreo',
     icon: { icon: 'tabler-box' },
     to: 'monitoreo'
   },
+//   {
+//     title: 'Panel Central',
+//     icon: { icon: 'tabler-layout-dashboard' },
+//     to: 'panel-central'
+//   },{
+//     title: 'Encuestas',
+//     icon: { icon: 'tabler-clipboard-text' },
+//     to: 'encuestas'
+//   },
   /* {
     title: 'Usuarios',
     icon: { icon: 'tabler-user' },

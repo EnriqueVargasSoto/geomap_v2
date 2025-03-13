@@ -2,14 +2,13 @@
 import ModalClient from './modales/modalClient.vue';
 import ModalRubro from './modales/modalRubro.vue';
 
-/* import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue' */
-
 // TODO: Get type from backend
 
 //!SECTION filtros
 
 const isDialogVisible = ref(false);
 const isDialogVisibleRubro = ref(false);
+
 const modalData = reactive({
   dato: null, // Aquí se guardará el objeto de la fila seleccionada
 });
@@ -38,6 +37,7 @@ const filtros = ref({
     idVendedor: null,
     page: null,
     per_page: null,
+    search: null,
 });
 
 const zonas = ref([
@@ -296,6 +296,7 @@ const closeModalRubro = () => {
                 </VRow>
             </VCardText>
         </VCard>
+
         <VCard class="mb-6">
 
             <VTabs v-model="currentTab" height="50px">
@@ -306,7 +307,6 @@ const closeModalRubro = () => {
             <VCardText>
                 <VWindow v-model="currentTab" touchless>
                     <VWindowItem
-
                         :key="1"
                         :value="`item-1`"
                     >
@@ -326,28 +326,28 @@ const closeModalRubro = () => {
                                 <!-- 👉 Search  -->
                                 <div style="inline-size: 15.625rem;">
                                     <AppTextField
-                                        v-model="searchQuery"
+                                        v-model="filtros.search"
                                         placeholder="Buscar..."
                                     />
                                 </div>
 
                                 <!-- 👉 Export button -->
-                                <VBtn
+                                <!-- <VBtn
                                     variant="tonal"
                                     color="secondary"
                                     prepend-icon="tabler-file-type-csv"
                                 >
                                     Excel
-                                </VBtn>
+                                </VBtn> -->
 
                                 <!-- 👉 Export button -->
-                                <VBtn
+                                <!-- <VBtn
                                     variant="tonal"
                                     color="secondary"
                                     prepend-icon="tabler-file-type-pdf"
                                 >
                                     PDF
-                                </VBtn>
+                                </VBtn> -->
 
                                 <!-- 👉 Add user button -->
                                 <VBtn
@@ -374,6 +374,8 @@ const closeModalRubro = () => {
                             :show-select ="check"
                             @update:options="updateOptions"
                             fixed-header
+                            noDataText="No Data"
+                            loadingText="Cargando..."
                         >
 
                             <template #item.clientes="{ item }">

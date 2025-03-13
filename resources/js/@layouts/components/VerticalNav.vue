@@ -10,6 +10,10 @@ import {
 import { useLayoutConfigStore } from '@layouts/stores/config'
 import { injectionKeyIsVerticalNavHovered } from '@layouts/symbols'
 
+import logo from '@images/xalesmap_blue_circle_final.png'
+
+const userData = useCookie('userData')
+
 const props = defineProps({
   tag: {
     type: null,
@@ -87,7 +91,8 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
           to="/"
           class="app-logo app-title-wrapper"
         >
-          <VNodeRenderer :nodes="layoutConfig.app.logo" />
+          <!-- <VNodeRenderer :nodes="layoutConfig.app.logo" /> -->
+          <img :src="logo" alt="Logo" style="height: 40px;">
 
           <Transition name="vertical-nav-app-title">
             <h1
@@ -95,13 +100,14 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
               class="app-logo-title"
               style="color: white;"
             >
-              {{ layoutConfig.app.title }}
+                {{ userData.get_empresa.razonSocial }}
+              <!-- {{ layoutConfig.app.title }} -->
             </h1>
           </Transition>
         </RouterLink>
         <!-- 👉 Vertical nav actions -->
         <!-- Show toggle collapsible in >md and close button in <md -->
-        <div class="header-action">
+        <div class="header-action" style="color: white!important;">
           <Component
             :is="layoutConfig.app.iconRenderer || 'div'"
             v-show="configStore.isVerticalNavCollapsed"

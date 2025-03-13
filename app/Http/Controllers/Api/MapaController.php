@@ -24,8 +24,10 @@ class MapaController extends Controller
 		$idRuta = $request->ruta;
 		$idVendedor = $request->vendedor;
 		$rubros = $request->rubros;
+        $oportunidad = $request->oportunidad;
+        $atendido = $request->atendido;
 
-		$lista = DB::select("exec web_obtenerClientesGeolocalizados ?,?,?,?,?,?,?,?,?,?", [$idEmpresa, $idSucursal, $idZona, $idRuta, $idVendedor, $idSupervisor, 'all', $rubros, 'all', 'all' ]);
+		$lista = DB::select("exec web_obtenerClientesGeolocalizados ?,?,?,?,?,?,?,?,?,?", [$idEmpresa, $idSucursal, $idZona, $idRuta, $idVendedor, $idSupervisor, $oportunidad, $rubros, $atendido, 'all' ]);
 		return response()->json($lista);
 	}
 

@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{c,o as n}from"./app-CzwwxCtj.js";const o={};function r(t,s){return n(),c("span",null,"Encuesta")}const f=e(o,[["render",r]]);export{f as default};

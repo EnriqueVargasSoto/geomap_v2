@@ -8,8 +8,8 @@
     import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
     import authV2MaskDark from '@images/pages/misc-mask-dark.png'
     import authV2MaskLight from '@images/pages/misc-mask-light.png'
-    import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-    import { themeConfig } from '@themeConfig'
+
+     import logo from '@images/xalesmap_high_quality.png'
 
     const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
     const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
@@ -43,24 +43,12 @@
         sucursal: null,
         usuario: null,
         clave: null,
-        /* remember: false, */
     })
 
     const login = async () => {
         console.log('form: ', form.value);
         try {
-            /* const res = await $api('/auth/login', {
-                method: 'POST',
-                body: {
-                    email: credentials.value.email,
-                    password: credentials.value.password,
-                },
-                onResponseError({ response }) {
-                    errors.value = response._data.errors
-                },
-            })
 
-            const { accessToken, userData, userAbilityRules } = res */
             const { data, error } = await useApi(`/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -128,10 +116,7 @@
 <template>
     <RouterLink to="/">
         <div class="auth-logo d-flex align-center gap-x-3">
-            <VNodeRenderer :nodes="themeConfig.app.logo" />
-            <h1 class="auth-title">
-                Tracking
-            </h1>
+            <img :src="logo" alt="Logo" style="height: 70px;">
         </div>
     </RouterLink>
 
@@ -145,22 +130,22 @@
         >
             <div class="position-relative bg-background w-100 me-0">
                 <div
-                class="d-flex align-center justify-center w-100 h-100"
-                style="padding-inline: 6.25rem;"
+                    class="d-flex align-center justify-center w-100 h-100"
+                    style="padding-inline: 6.25rem;"
                 >
-                <VImg
-                    max-width="613"
-                    :src="authThemeImg"
-                    class="auth-illustration mt-16 mb-2"
-                />
+                    <VImg
+                        max-width="613"
+                        :src="authThemeImg"
+                        class="auth-illustration mt-16 mb-2"
+                    />
                 </div>
 
                 <img
-                class="auth-footer-mask flip-in-rtl"
-                :src="authThemeMask"
-                alt="auth-footer-mask"
-                height="280"
-                width="100"
+                    class="auth-footer-mask flip-in-rtl"
+                    :src="authThemeMask"
+                    alt="auth-footer-mask"
+                    height="280"
+                    width="100"
                 >
             </div>
         </VCol>
@@ -177,9 +162,9 @@
             >
                 <VCardText>
                     <h4 class="text-h4 mb-1">
-                        Welcome to <span class="text-capitalize">Tracking</span>! 👋🏻
+                        Binvenido a <span class="text-capitalize">GeoMap</span>! 👋🏻
                     </h4>
-                    <p class="mb-0">Inicie sesión en su cuenta y comience la aventura.</p>
+                    <p class="mb-0">Inicie sesión en su cuenta.</p>
                 </VCardText>
                 <VCardText>
                     <VForm ref="refVForm" @submit.prevent="onSubmit">
@@ -240,18 +225,7 @@
                                     @click:append-inner="isPasswordVisible = !isPasswordVisible"
                                 />
 
-                                <div class="d-flex align-center flex-wrap justify-space-between my-6">
-                                    <!-- <VCheckbox
-                                        v-model="form.remember"
-                                        label="Remember me"
-                                    />
-                                    <RouterLink
-                                        class="text-primary"
-                                        :to="{ name: 'pages-authentication-forgot-password-v2' }"
-                                    >
-                                        Forgot Password?
-                                    </RouterLink> -->
-                                </div>
+                                <div class="d-flex align-center flex-wrap justify-space-between my-6"></div>
 
                                 <VBtn
                                     block
@@ -261,38 +235,6 @@
                                 </VBtn>
                             </VCol>
 
-                            <!-- create account -->
-                            <!-- <VCol
-                                cols="12"
-                                class="text-body-1 text-center"
-                            >
-                                <span class="d-inline-block">
-                                New on our platform?
-                                </span>
-                                <RouterLink
-                                class="text-primary ms-1 d-inline-block text-body-1"
-                                :to="{ name: 'pages-authentication-register-v2' }"
-                                >
-                                Create an account
-                                </RouterLink>
-                            </VCol> -->
-
-                            <!-- <VCol
-                                cols="12"
-                                class="d-flex align-center"
-                            >
-                                <VDivider />
-                                <span class="mx-4">or</span>
-                                <VDivider />
-                            </VCol> -->
-
-                            <!-- auth providers -->
-                            <!-- <VCol
-                                cols="12"
-                                class="text-center"
-                            >
-                                <AuthProvider />
-                            </VCol> -->
                         </VRow>
                     </VForm>
                 </VCardText>

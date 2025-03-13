@@ -55,5 +55,17 @@ export const routes = [
         component: () => import('@/views/intranet/preventa/Index.vue'),//Dashboard,//DashboardAnalytics
         props: true, // Esto permite recibir parámetros como props
         meta: { requiresAuth: true, navActiveLink: "monitoreo" } // Ruta protegida
-    }
+    },
+    {
+        path: '/panel-central', // 📌 Asegúrate de que la ruta sea correcta
+        name: 'panel-central',
+        component: () => import('@/views/intranet/panel_central/Index.vue'),//Dashboard,//DashboardAnalytics
+        meta: { requiresAuth: true } // Ruta protegida
+    },
+    {
+        path: '/encuestas', // 📌 Asegúrate de que la ruta sea correcta
+        name: 'encuestas',
+        component: () => import('@/views/intranet/encuestas/Index.vue'),//Dashboard,//DashboardAnalytics
+        meta: { requiresAuth: true } // Ruta protegida
+    },
 ];

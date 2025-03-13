@@ -67,9 +67,11 @@ const hideTitleAndBadge = configStore.isVerticalNavMini()
 
 <style lang="scss">
 .layout-vertical-nav {
-  .nav-link a {
-    display: flex;
-    align-items: center;
-  }
+
+    color: white!important;
+    .nav-link a {
+        display: flex;
+        align-items: center;
+    }
 }
 </style>

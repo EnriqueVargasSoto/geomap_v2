@@ -8,9 +8,11 @@ const router = useRouter()
 
 // const center = { lat: 40.689247, lng: -74.044502 }
 
-const selected = ref(['003', '001', '002', '007'])
+const selected = ref([])
 const selectedAtendidos = ref(['1', '0'])
 const selectedOtros = ref([])
+const selectOportunidad = ref(false);
+const selectAtendido = ref(false);
 
 // Grupo 1 - Checkboxes
 const grupo1 = ref([
@@ -120,7 +122,9 @@ const paramsForm = ref({
     ruta: null,
     fecha: null,
     vendedor: null,
-    rubros: selected.value.join(",")
+    rubros: null,//selected.value.join(","),
+    oportunidad: null,
+    atendido: null,
 });
 
 const fetchLocations = async () => {
@@ -150,7 +154,7 @@ const fetchGeocerca= async () => {
 
 // 📌 Función para obtener iconos desde public/icons/
 const getIconByRubro = (rubro, estado) => {
-  const iconBase = "/icons/"; // Ruta desde public/
+  const iconBase = import.meta.env.BASE_URL +"icons/"; // Ruta desde public/
   if (rubro == "001" && estado == "0") {
         return `${iconBase}lp-001.png`;
   };
@@ -238,8 +242,14 @@ const initMap = async () => {
 };
 
 // Observar cambios en checkboxes y actualizar mapa
-watch([selected, selectedAtendidos, selectedOtros], async () => {
-  paramsForm.value.rubros = selected.value.join(",")
+watch([selected, selectedAtendidos, selectedOtros, selectOportunidad, selectAtendido], async () => {
+    console.log('oprtunidad: ', selectOportunidad.value);
+    paramsForm.value.oportunidad = selectOportunidad.value == true ? '1':'0';
+    paramsForm.value.atendido = selectAtendido.value == true ? '1':'0';
+    if (paramsForm.value.oportunidad == false && paramsForm.value.atendido == true) {
+        selected.value = ['001','002','003','007']
+    }
+  paramsForm.value.rubros = selectOportunidad.value == false ? selected.value.join(","): '';
   await fetchLocations()
 })
 
@@ -256,7 +266,9 @@ onMounted(async () => {
         ruta: data.value.ruta,
         fecha: user.value.fecha,
         vendedor: data.value.vendedorx,
-        rubros: selected.value.join(",")
+        rubros: 'all',//selectOportunidad.value == false ? selected.value.join(","): '',
+        oportunidad: 'all',//selectOportunidad.value == true ? '1':'0',
+        atendido: 'all'
     }
   await fetchLocations();
 });
@@ -364,6 +376,19 @@ onMounted(async () => {
                                                 </VCol>
                                             </VRow>
                                         </fieldset>
+                                    </VCol>
+                                    <!-- Grupo 1 -->
+                                    <VCol cols="12" style="padding: 0px!important;">
+                                        <VCheckbox v-model="selectOportunidad" label="Oportunidad seect" :value="true" hide-details />
+                                        <VCheckbox v-model="selectAtendido" label=" atendido" :value="true" hide-details />
+                                        <!-- <fieldset class="fieldset-group">
+                                            <legend>Otros</legend>
+                                            <VRow no-gutters>
+                                                <VCol v-for="(item, index) in grupo3" :key="index" cols="auto" class="mr-4">
+                                                    <VCheckbox v-model="selectedOtros" :label="item.label" :value="item.value" hide-details />
+                                                </VCol>
+                                            </VRow>
+                                        </fieldset> -->
                                     </VCol>
                                 </VExpansionPanelText>
                             </VExpansionPanel>

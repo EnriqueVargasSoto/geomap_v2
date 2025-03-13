@@ -19,7 +19,7 @@ class ZonaController extends Controller
 		$idSucursal = $request->idSucursal ;
 		$idPersona = $request->idPersona;
 		$lista = DB::select("exec web_obtenerZonasxPersona ?,?,?", [$idEmpresa, $idSucursal, $idPersona ]);
-		return response()->json(['data'=>$lista]);
+		return response()->json(['data'=>$lista, 'sp'=>'web_obtenerZonasxPersona']);
     }
 
     /**

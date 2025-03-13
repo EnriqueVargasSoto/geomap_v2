@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{c as n,o as r}from"./app-CzwwxCtj.js";const c={};function o(t,a){return r(),n("span",null,"Panel Central")}const l=e(c,[["render",o]]);export{l as default};
